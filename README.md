@@ -18,3 +18,12 @@ python -m eval_framework.cli run --dataset data/evals/sample_offer_parser_redact
 python -m eval_framework.cli compare --left runs/run_a.json --right runs/run_b.json
 python -m eval_framework.cli dataset add data/evals/sample_offer_parser_redacted.json --example '{"example_id":"ex-2","input":{},"expected":{}}'
 ```
+
+## Web UI
+
+```bash
+source .venv/bin/activate
+eval-framework-web
+```
+
+Then open `http://127.0.0.1:8000`.

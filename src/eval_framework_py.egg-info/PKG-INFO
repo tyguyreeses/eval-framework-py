@@ -1,0 +1,12 @@
+Metadata-Version: 2.4
+Name: eval-framework-py
+Version: 0.1.0
+Summary: Project-agnostic lightweight evaluation framework for LLM workflows
+Requires-Python: >=3.10
+Requires-Dist: pydantic<3,>=2
+Requires-Dist: fastapi<1,>=0.115
+Requires-Dist: uvicorn<1,>=0.30
+Requires-Dist: jinja2<4,>=3.1
+Requires-Dist: python-multipart<1,>=0.0.9
+Provides-Extra: dev
+Requires-Dist: pytest==8.4.2; extra == "dev"

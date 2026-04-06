@@ -7,7 +7,13 @@ name = "eval-framework-py"
 version = "0.1.0"
 description = "Project-agnostic lightweight evaluation framework for LLM workflows"
 requires-python = ">=3.10"
-dependencies = []
+dependencies = [
+    "pydantic>=2,<3",
+    "fastapi>=0.115,<1",
+    "uvicorn>=0.30,<1",
+    "jinja2>=3.1,<4",
+    "python-multipart>=0.0.9,<1",
+]
 
 [project.optional-dependencies]
 dev = [
@@ -16,6 +22,7 @@ dev = [
 
 [project.scripts]
 eval-framework = "eval_framework.cli:main"
+eval-framework-web = "eval_framework.webapp:main"
 
 [tool.pytest.ini_options]
 addopts = "-q"

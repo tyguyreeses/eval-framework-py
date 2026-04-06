@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Eval Framework UI</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <div class="background-glow bg-a"></div>
+    <div class="background-glow bg-b"></div>
+    <main class="page">
+      <header class="hero">
+        <h1>Eval Framework Console</h1>
+        <p>Run experiments, compare runs, and manage datasets from one place.</p>
+      </header>
+
+      {% if message %}
+      <section class="status success">{{ message }}</section>
+      {% endif %}
+      {% if error %}
+      <section class="status error">{{ error }}</section>
+      {% endif %}
+
+      <section class="grid">
+        <article class="card">
+          <h2>Run Evaluation</h2>
+          <form action="/run" method="post">
+            <label>Dataset Path</label>
+            <input type="text" name="dataset_path" value="{{ default_dataset }}" required />
+
+            <label>Task</label>
+            <select name="task_name">
+              {% for task in tasks %}
+              <option value="{{ task }}">{{ task }}</option>
+              {% endfor %}
+            </select>
+
+            <label>Scorer</label>
+            <select name="scorer_name">
+              {% for scorer in scorers %}
+              <option value="{{ scorer }}">{{ scorer }}</option>
+              {% endfor %}
+            </select>
+
+            <label>Run ID (optional)</label>
+            <input type="text" name="run_id" />
+
+            <label>Provider</label>
+            <input type="text" name="provider" value="openai" />
+
+            <label>Model</label>
+            <input type="text" name="model" value="gpt-5-mini" />
+
+            <div class="inline-fields">
+              <label class="checkbox"><input type="checkbox" name="deterministic_only" /> Deterministic only</label>
+              <label class="checkbox"><input type="checkbox" name="openai_available" checked /> OpenAI available</label>
+            </div>
+
+            <label>Gate Mode</label>
+            <select name="gate_mode">
+              <option value="soft">soft</option>
+              <option value="hard">hard</option>
+            </select>
+
+            <label>Threshold</label>
+            <input type="number" name="threshold" value="0.8" min="0" max="1" step="0.01" />
+
+            <label>Runs Dir (optional)</label>
+            <input type="text" name="runs_dir" />
+
+            <label>Output Path (optional)</label>
+            <input type="text" name="output_path" />
+
+            <button type="submit">Run Eval</button>
+          </form>
+        </article>
+
+        <article class="card">
+          <h2>Compare Runs</h2>
+          <form action="/compare" method="post">
+            <label>Left Run Path</label>
+            <input type="text" name="left_path" value="{{ default_left_run }}" required />
+
+            <label>Right Run Path</label>
+            <input type="text" name="right_path" value="{{ default_right_run }}" required />
+
+            <label>Output Path (optional)</label>
+            <input type="text" name="output_path" />
+
+            <button type="submit">Compare</button>
+          </form>
+        </article>
+
+        <article class="card">
+          <h2>Add Dataset Example</h2>
+          <form action="/dataset/add" method="post">
+            <label>Dataset Path</label>
+            <input type="text" name="dataset_path" value="{{ default_dataset }}" required />
+
+            <label>Example ID</label>
+            <input type="text" name="example_id" required />
+
+            <label>Input JSON Object</label>
+            <textarea name="input_json" rows="5" required>{"text": "sample input"}</textarea>
+
+            <label>Expected JSON Object</label>
+            <textarea name="expected_json" rows="5" required>{"label": "hire"}</textarea>
+
+            <button type="submit">Add Example</button>
+          </form>
+        </article>
+      </section>
+
+      <section class="grid results">
+        <article class="card">
+          <h2>Run Result</h2>
+          <pre>{{ run_result_text or "No run executed yet." }}</pre>
+        </article>
+        <article class="card">
+          <h2>Compare Result</h2>
+          <pre>{{ compare_result_text or "No comparison executed yet." }}</pre>
+        </article>
+        <article class="card">
+          <h2>Dataset Update Result</h2>
+          <pre>{{ dataset_result_text or "No dataset changes yet." }}</pre>
+        </article>
+      </section>
+
+      <section class="grid lists">
+        <article class="card">
+          <h2>Detected Datasets</h2>
+          <ul>
+            {% for dataset in datasets %}
+            <li>{{ dataset }}</li>
+            {% else %}
+            <li>None found in data/evals</li>
+            {% endfor %}
+          </ul>
+        </article>
+        <article class="card">
+          <h2>Detected Runs</h2>
+          <ul>
+            {% for run in runs %}
+            <li>{{ run }}</li>
+            {% else %}
+            <li>None found in data/eval_runs</li>
+            {% endfor %}
+          </ul>
+        </article>
+      </section>
+    </main>
+  </body>
+</html>

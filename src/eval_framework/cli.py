@@ -7,6 +7,7 @@ from typing import Any
 
 from .evals.comparator import compare_runs
 from .evals.dataset import Dataset
+from .evals.grader import Grader
 from .evals.logging import RunLogger
 from .evals.runner import run_evaluation
 
@@ -60,6 +61,7 @@ def handle_run_command(args: argparse.Namespace) -> dict[str, Any]:
     run = run_evaluation(
         dataset=str(args.dataset),
         task=args.task,
+        grader=Grader(scorer_name=args.scorer),
         run_id=args.run_id,
         provider=args.provider,
         model=args.model,
@@ -102,6 +104,7 @@ def build_parser() -> argparse.ArgumentParser:
     run_parser.add_argument("--run-id", required=False)
     run_parser.add_argument("--provider", default="openai")
     run_parser.add_argument("--model", default="gpt-5-mini")
+    run_parser.add_argument("--scorer", default="exact_match")
     run_parser.add_argument("--deterministic-only", action="store_true")
     run_parser.add_argument("--openai-unavailable", action="store_true")
     run_parser.add_argument("--gate-mode", choices=("soft", "hard"), default="soft")

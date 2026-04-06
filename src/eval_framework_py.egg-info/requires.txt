@@ -1,0 +1,8 @@
+pydantic<3,>=2
+fastapi<1,>=0.115
+uvicorn<1,>=0.30
+jinja2<4,>=3.1
+python-multipart<1,>=0.0.9
+
+[dev]
+pytest==8.4.2

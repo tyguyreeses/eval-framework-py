@@ -25,6 +25,10 @@ DEFAULT_TASK_REGISTRY: dict[str, TaskCallable] = {
 }
 
 
+def list_available_tasks() -> list[str]:
+    return sorted(DEFAULT_TASK_REGISTRY.keys())
+
+
 def resolve_task(task: str | TaskCallable) -> TaskCallable:
     if callable(task):
         return task

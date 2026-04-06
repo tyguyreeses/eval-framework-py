@@ -1,0 +1,60 @@
+{
+    "tests": [
+        {
+            "score": 0,
+            "max_score": 0,
+            "name": "test_eval_framework_integration.py::test_dataset_load_append_save_roundtrip",
+            "output": "\n",
+            "visibility": "visible"
+        },
+        {
+            "score": 0,
+            "max_score": 0,
+            "name": "test_eval_framework_integration.py::test_eval_cli_run_compare_and_persisted_logs",
+            "output": "\n",
+            "visibility": "visible"
+        },
+        {
+            "score": 0,
+            "max_score": 0,
+            "name": "test_eval_framework_phase2.py::test_shared_eval_envelope_accepts_multiple_task_schemas",
+            "output": "\n",
+            "visibility": "visible"
+        },
+        {
+            "score": 0,
+            "max_score": 0,
+            "name": "test_eval_framework_phase2.py::test_judge_strategy_defaults_to_openai_gpt_5_mini",
+            "output": "\n",
+            "visibility": "visible"
+        },
+        {
+            "score": 0,
+            "max_score": 0,
+            "name": "test_eval_framework_phase2.py::test_judge_strategy_uses_deterministic_fallback_when_requested_or_openai_unavailable",
+            "output": "\n",
+            "visibility": "visible"
+        },
+        {
+            "score": 0,
+            "max_score": 0,
+            "name": "test_eval_framework_phase2.py::test_soft_gate_is_default_and_hard_gate_is_opt_in",
+            "output": "\n",
+            "visibility": "visible"
+        },
+        {
+            "score": 0,
+            "max_score": 0,
+            "name": "test_eval_framework_phase2.py::test_cli_exposes_required_eval_workflow_surfaces",
+            "output": "\n",
+            "visibility": "visible"
+        },
+        {
+            "score": 0,
+            "max_score": 0,
+            "name": "test_eval_framework_phase2.py::test_sample_eval_datasets_are_redacted_and_safe_for_repo",
+            "output": "\n",
+            "visibility": "visible"
+        }
+    ]
+}
