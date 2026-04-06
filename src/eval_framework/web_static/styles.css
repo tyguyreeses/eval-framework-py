@@ -147,6 +147,10 @@ button:hover {
   filter: saturate(1.06);
 }
 
+.danger {
+  background: linear-gradient(135deg, #8b2b2b, #b33a3a);
+}
+
 .inline-fields {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -167,6 +171,30 @@ button:hover {
 .checkbox input {
   width: auto;
   margin: 0;
+}
+
+.tight-form {
+  margin-top: 14px;
+  padding-top: 10px;
+  border-top: 1px dashed #d3c8b2;
+}
+
+.subtle {
+  margin: 0 0 10px;
+  color: #51615a;
+  font-size: 0.88rem;
+}
+
+.trend-grid .span-two {
+  grid-column: span 2;
+}
+
+canvas {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  border: 1px solid #d6ccba;
+  background: #f7f4eb;
 }
 
 pre {
@@ -205,5 +233,9 @@ li {
   .grid,
   .inline-fields {
     grid-template-columns: 1fr;
+  }
+
+  .trend-grid .span-two {
+    grid-column: span 1;
   }
 }

@@ -27,3 +27,10 @@ eval-framework-web
 ```
 
 Then open `http://127.0.0.1:8000`.
+
+The web UI includes:
+- Run evaluation with task/scorer/gate settings
+- Save/apply/delete experiment presets
+- Compare run artifacts
+- Add dataset examples
+- Run trend chart for recent run mean scores

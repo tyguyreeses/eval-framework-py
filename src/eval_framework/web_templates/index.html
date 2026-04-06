@@ -24,55 +24,85 @@
 
       <section class="grid">
         <article class="card">
+          <h2>Experiment Presets</h2>
+          <form action="/presets/apply" method="post">
+            <label>Saved Preset</label>
+            <select name="preset_name" required>
+              {% for preset in presets %}
+              <option value="{{ preset.name }}">{{ preset.name }}</option>
+              {% else %}
+              <option value="" disabled selected>No presets yet</option>
+              {% endfor %}
+            </select>
+            <button type="submit">Apply Preset</button>
+          </form>
+          <form action="/presets/delete" method="post" class="tight-form">
+            <label>Delete Preset</label>
+            <select name="preset_name" required>
+              {% for preset in presets %}
+              <option value="{{ preset.name }}">{{ preset.name }}</option>
+              {% else %}
+              <option value="" disabled selected>No presets yet</option>
+              {% endfor %}
+            </select>
+            <button type="submit" class="danger">Delete</button>
+          </form>
+        </article>
+
+        <article class="card">
           <h2>Run Evaluation</h2>
           <form action="/run" method="post">
             <label>Dataset Path</label>
-            <input type="text" name="dataset_path" value="{{ default_dataset }}" required />
+            <input type="text" name="dataset_path" value="{{ form_defaults.dataset_path }}" required />
 
             <label>Task</label>
             <select name="task_name">
               {% for task in tasks %}
-              <option value="{{ task }}">{{ task }}</option>
+              <option value="{{ task }}" {% if task == form_defaults.task_name %}selected{% endif %}>{{ task }}</option>
               {% endfor %}
             </select>
 
             <label>Scorer</label>
             <select name="scorer_name">
               {% for scorer in scorers %}
-              <option value="{{ scorer }}">{{ scorer }}</option>
+              <option value="{{ scorer }}" {% if scorer == form_defaults.scorer_name %}selected{% endif %}>{{ scorer }}</option>
               {% endfor %}
             </select>
 
             <label>Run ID (optional)</label>
-            <input type="text" name="run_id" />
+            <input type="text" name="run_id" value="{{ form_defaults.run_id }}" />
 
             <label>Provider</label>
-            <input type="text" name="provider" value="openai" />
+            <input type="text" name="provider" value="{{ form_defaults.provider }}" />
 
             <label>Model</label>
-            <input type="text" name="model" value="gpt-5-mini" />
+            <input type="text" name="model" value="{{ form_defaults.model }}" />
 
             <div class="inline-fields">
-              <label class="checkbox"><input type="checkbox" name="deterministic_only" /> Deterministic only</label>
-              <label class="checkbox"><input type="checkbox" name="openai_available" checked /> OpenAI available</label>
+              <label class="checkbox"><input type="checkbox" name="deterministic_only" value="true" {% if form_defaults.deterministic_only %}checked{% endif %} /> Deterministic only</label>
+              <label class="checkbox"><input type="checkbox" name="openai_available" value="true" {% if form_defaults.openai_available %}checked{% endif %} /> OpenAI available</label>
             </div>
 
             <label>Gate Mode</label>
             <select name="gate_mode">
-              <option value="soft">soft</option>
-              <option value="hard">hard</option>
+              <option value="soft" {% if form_defaults.gate_mode == "soft" %}selected{% endif %}>soft</option>
+              <option value="hard" {% if form_defaults.gate_mode == "hard" %}selected{% endif %}>hard</option>
             </select>
 
             <label>Threshold</label>
-            <input type="number" name="threshold" value="0.8" min="0" max="1" step="0.01" />
+            <input type="number" name="threshold" value="{{ form_defaults.threshold }}" min="0" max="1" step="0.01" />
 
             <label>Runs Dir (optional)</label>
-            <input type="text" name="runs_dir" />
+            <input type="text" name="runs_dir" value="{{ form_defaults.runs_dir }}" />
 
             <label>Output Path (optional)</label>
-            <input type="text" name="output_path" />
+            <input type="text" name="output_path" value="{{ form_defaults.output_path }}" />
+
+            <label>Preset Name (optional, for save button)</label>
+            <input type="text" name="preset_name" value="" placeholder="baseline-gpt5-mini-v1" />
 
             <button type="submit">Run Eval</button>
+            <button type="submit" formaction="/presets/save" formmethod="post">Save Settings As Preset</button>
           </form>
         </article>
 
@@ -80,13 +110,13 @@
           <h2>Compare Runs</h2>
           <form action="/compare" method="post">
             <label>Left Run Path</label>
-            <input type="text" name="left_path" value="{{ default_left_run }}" required />
+            <input type="text" name="left_path" value="{{ form_defaults.left_path }}" required />
 
             <label>Right Run Path</label>
-            <input type="text" name="right_path" value="{{ default_right_run }}" required />
+            <input type="text" name="right_path" value="{{ form_defaults.right_path }}" required />
 
             <label>Output Path (optional)</label>
-            <input type="text" name="output_path" />
+            <input type="text" name="output_path" value="{{ form_defaults.compare_output_path }}" />
 
             <button type="submit">Compare</button>
           </form>
@@ -96,16 +126,16 @@
           <h2>Add Dataset Example</h2>
           <form action="/dataset/add" method="post">
             <label>Dataset Path</label>
-            <input type="text" name="dataset_path" value="{{ default_dataset }}" required />
+            <input type="text" name="dataset_path" value="{{ form_defaults.dataset_add_path }}" required />
 
             <label>Example ID</label>
             <input type="text" name="example_id" required />
 
             <label>Input JSON Object</label>
-            <textarea name="input_json" rows="5" required>{"text": "sample input"}</textarea>
+            <textarea name="input_json" rows="5" required>{{ form_defaults.input_json }}</textarea>
 
             <label>Expected JSON Object</label>
-            <textarea name="expected_json" rows="5" required>{"label": "hire"}</textarea>
+            <textarea name="expected_json" rows="5" required>{{ form_defaults.expected_json }}</textarea>
 
             <button type="submit">Add Example</button>
           </form>
@@ -124,6 +154,24 @@
         <article class="card">
           <h2>Dataset Update Result</h2>
           <pre>{{ dataset_result_text or "No dataset changes yet." }}</pre>
+        </article>
+      </section>
+
+      <section class="grid trend-grid">
+        <article class="card span-two">
+          <h2>Run Trend</h2>
+          <p class="subtle">Mean score over recent runs (latest {{ trend|length }}).</p>
+          <canvas id="runTrend" width="900" height="260" data-series='{{ trend_json | safe }}'></canvas>
+        </article>
+        <article class="card">
+          <h2>Recent Runs</h2>
+          <ul>
+            {% for point in trend|reverse %}
+            <li><strong>{{ point.run_id }}</strong> | mean={{ "%.3f"|format(point.mean_score) }} | pass={{ "%.3f"|format(point.pass_rate) }}</li>
+            {% else %}
+            <li>No run trend data yet.</li>
+            {% endfor %}
+          </ul>
         </article>
       </section>
 
@@ -150,5 +198,72 @@
         </article>
       </section>
     </main>
+    <script>
+      (() => {
+        const canvas = document.getElementById("runTrend");
+        if (!canvas) return;
+        const series = JSON.parse(canvas.dataset.series || "[]");
+        const ctx = canvas.getContext("2d");
+        if (!ctx || series.length === 0) {
+          return;
+        }
+
+        const width = canvas.width;
+        const height = canvas.height;
+        const margin = { top: 20, right: 20, bottom: 38, left: 40 };
+        const plotW = width - margin.left - margin.right;
+        const plotH = height - margin.top - margin.bottom;
+
+        const points = series.map((item, idx) => ({
+          x: margin.left + (plotW * idx) / Math.max(series.length - 1, 1),
+          y: margin.top + (1 - Number(item.mean_score || 0)) * plotH,
+          label: item.run_id,
+          value: Number(item.mean_score || 0),
+        }));
+
+        ctx.clearRect(0, 0, width, height);
+        ctx.fillStyle = "#f7f2e6";
+        ctx.fillRect(0, 0, width, height);
+
+        ctx.strokeStyle = "#c7bca4";
+        ctx.lineWidth = 1;
+        for (let i = 0; i <= 5; i += 1) {
+          const y = margin.top + (plotH * i) / 5;
+          ctx.beginPath();
+          ctx.moveTo(margin.left, y);
+          ctx.lineTo(width - margin.right, y);
+          ctx.stroke();
+        }
+
+        ctx.strokeStyle = "#236976";
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        points.forEach((p, index) => {
+          if (index === 0) ctx.moveTo(p.x, p.y);
+          else ctx.lineTo(p.x, p.y);
+        });
+        ctx.stroke();
+
+        points.forEach((p, index) => {
+          ctx.fillStyle = "#b5432a";
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, 3.6, 0, Math.PI * 2);
+          ctx.fill();
+
+          if (index === points.length - 1 || index === 0 || index % 4 === 0) {
+            ctx.fillStyle = "#24302c";
+            ctx.font = "11px IBM Plex Sans, sans-serif";
+            const label = p.label.length > 10 ? `${p.label.slice(0, 10)}...` : p.label;
+            ctx.fillText(label, p.x - 18, height - 12);
+          }
+        });
+
+        ctx.fillStyle = "#24302c";
+        ctx.font = "12px IBM Plex Sans, sans-serif";
+        ctx.fillText("Mean score", 8, 14);
+        ctx.fillText("1.0", 10, margin.top + 4);
+        ctx.fillText("0.0", 10, margin.top + plotH);
+      })();
+    </script>
   </body>
 </html>
