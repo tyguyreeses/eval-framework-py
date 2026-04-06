@@ -180,6 +180,7 @@ def _render_home(
     if form_defaults:
         defaults.update(form_defaults)
     return templates.TemplateResponse(
+        request,
         "index.html",
         {
             "request": request,
