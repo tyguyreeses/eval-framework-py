@@ -1,0 +1,26 @@
+{
+  "dataset_name": "offer_parser_sample_redacted",
+  "notes": "All personal/company identifiers are redacted for repository safety.",
+  "examples": [
+    {
+      "example_id": "redacted-001",
+      "input": {
+        "resume_text": "[REDACTED_CANDIDATE] has 5 years of backend experience in distributed systems.",
+        "job_posting": "[REDACTED_COMPANY] is hiring a Senior Backend Engineer in [REDACTED_LOCATION]."
+      },
+      "expected": {
+        "recommendation": "strong_hire"
+      }
+    },
+    {
+      "example_id": "redacted-002",
+      "input": {
+        "resume_text": "[REDACTED_CANDIDATE] led data pipeline migrations and improved reliability.",
+        "job_posting": "[REDACTED_COMPANY] seeks an ML Engineer for remote US work."
+      },
+      "expected": {
+        "recommendation": "hire"
+      }
+    }
+  ]
+}
